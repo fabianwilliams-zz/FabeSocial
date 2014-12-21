@@ -8,7 +8,9 @@ namespace FabeSocial.iOS
 {
 	public partial class SecondViewController : UIViewController
 	{
-		public SecondViewController (IntPtr handle) : base (handle)
+        private SIService siService;
+
+        public SecondViewController (IntPtr handle) : base (handle)
 		{
 			Title = NSBundle.MainBundle.LocalizedString ("Second", "Second");
 			TabBarItem.Image = UIImage.FromBundle ("second");
@@ -24,11 +26,13 @@ namespace FabeSocial.iOS
 
 		#region View lifecycle
 
-		public override void ViewDidLoad ()
+		public override async void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
 			
 			// Perform any additional setup after loading the view, typically from a nib.
+            siService = SIService.DefaultService;
+            await siService.InitializeStoreAsync();
 		}
 
 		public override void ViewWillAppear (bool animated)
@@ -52,6 +56,37 @@ namespace FabeSocial.iOS
 		}
 
 		#endregion
-	}
+
+        #region UI Items
+
+        async partial void OnAdd (UIButton sender)
+        {
+            if (string.IsNullOrWhiteSpace(fname.Text))
+                return;
+            
+            var newItem = new SocialItem
+            {
+                //add items here
+                FirstName = fname.Text,
+                LastName = lname.Text,
+                EmailAddr = emailaddr.Text,
+                MobilePhone = cphone.Text,
+                TwitterHandle = twitterh.Text,
+                IGName = igname.Text,
+                FBName = fbname.Text
+            };
+
+            await siService.InsertSocItemAsync(newItem);
+
+            var index = siService.Items.FindIndex(item => item.Id == newItem.Id);
+
+            //TableView.InsertRows(new[] { NSIndexPath.FromItemSection(index, 0) },
+            //UITableViewRowAnimation.Top);
+
+            //itemText.Text = "";
+        }
+
+        #endregion
+    }
 }
 

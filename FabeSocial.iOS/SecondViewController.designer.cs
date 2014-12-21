@@ -6,6 +6,7 @@
 //
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
+using MonoTouch.UIKit;
 
 namespace FabeSocial.iOS
 {
@@ -37,7 +38,8 @@ namespace FabeSocial.iOS
 		MonoTouch.UIKit.UITextField twitterh { get; set; }
 
 		[Action ("OnAdd:")]
-		partial void OnAdd (MonoTouch.Foundation.NSObject sender);
+        [GeneratedCode("iOS Designer", "1.0")]
+        partial void OnAdd(UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
